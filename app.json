@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "smartbool_app",
+    "slug": "snack-d2b8f117-ee4a-4fdf-9c72-4580a62c3902",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/smarty.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "myapp",
+    "splash": {
+      "image": "./assets/smarty.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/smarty.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/smarty.png"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ]
+  }
+}
