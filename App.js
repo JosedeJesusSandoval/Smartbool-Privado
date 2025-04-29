@@ -78,7 +78,7 @@ const HomeScreen = () => {
   );
 };
 
-const LoginScreen = ({ setIsLoggedIn }) => {
+const LoginScreen = ({ setIsLoggedIn, setUser }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -134,7 +134,7 @@ const LoginScreen = ({ setIsLoggedIn }) => {
     } else {
       const { data, error } = await supabase
         .from('usuarios')
-        .select('password_hash')
+        .select('id, email, password_hash') // <--- selecciona también 'id' y 'email'
         .eq('email', email)
         .single();
 
@@ -153,6 +153,8 @@ const LoginScreen = ({ setIsLoggedIn }) => {
           setStatus("Correo guardado en SQLite.");
         }
 
+        // Aquí se establece el usuario y el estado de inicio de sesión
+        setUser(data);  // Establece el objeto del usuario aquí
         setIsLoggedIn(true);
         setStatus("Inicio de sesión exitoso.");
       } else {
@@ -239,6 +241,7 @@ const LogOutScreen = ({ route, navigation }) => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // Inicializa el estado de 'user'
   const Stack = createStackNavigator();
 
   const ConfigScreen = () => {
@@ -264,17 +267,19 @@ const App = () => {
         {isLoggedIn ? (
           <>
             <Drawer.Screen name="Inicio" component={HomeScreen} />
-            <Drawer.Screen name="Configurar" component={ConfigScreen} />
+            <Drawer.Screen name="Configurar">
+              {() => <Config usuario={user} />}
+            </Drawer.Screen>
             <Drawer.Screen name="Sobre Nosotros" component={AboutUs} />
             <Drawer.Screen
               name="Log Out"
               component={LogOutScreen}
-              initialParams={{ setIsLoggedIn }} // Asegúrate de pasar setIsLoggedIn aquí
+              initialParams={{ setIsLoggedIn }}  // Aquí ya estás pasando setIsLoggedIn
             />
           </>
         ) : (
           <Drawer.Screen name="Login">
-            {() => <LoginScreen setIsLoggedIn={setIsLoggedIn} />}
+            {() => <LoginScreen setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
           </Drawer.Screen>
         )}
       </Drawer.Navigator>

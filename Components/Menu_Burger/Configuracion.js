@@ -1,15 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, Picker } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { supabase } from '../../DB/supabase'; // Asegúrate de que esta ruta sea correcta
 
-const Settings = ({ navigation }) => {
-  const [language, setLanguage] = useState('es'); // Estado para el idioma
+const Settings = ({ usuario, navigation }) => {
+
+  // Muestra un mensaje si no se encuentra 'usuario'
+  if (!usuario) {
+    return <Text>Esperando usuario...</Text>;
+  }
 
   const ChangePassword = () => {
-    navigation.navigate('Cambiar Contraseña'); // Asegúrate de usar el nombre correcto
+    navigation.navigate('Cambiar Contraseña');
   };
 
-  const clearHistory = () => {
-    Alert.alert('Historial Limpio', 'Se ha eliminado el historial.');
+  const clearHistory = async () => {
+    if (!usuario || !usuario.id) {
+      Alert.alert('Error', 'No se encontró el ID del usuario.');
+      return;
+    }
+
+    const { error: deleteError } = await supabase
+      .from('historial')
+      .delete()
+      .eq('user_id', usuario.id);
+
+    if (deleteError) {
+      Alert.alert('Error', 'No se pudo eliminar el historial.');
+      console.error(deleteError);
+    } else {
+      Alert.alert('Historial Limpio', 'Se ha eliminado el historial correctamente.');
+    }
   };
 
   const changeEmail = () => {
@@ -18,16 +38,15 @@ const Settings = ({ navigation }) => {
 
   const logout = () => {
     Alert.alert('Cerrar Sesión', 'Has cerrado sesión correctamente.');
+    navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configuración</Text>
 
-      {/* Selector de idioma */}
       <Text style={styles.label}>Seleccionar Idioma</Text>
 
-      {/* Botones de configuración */}
       <TouchableOpacity style={styles.button} onPress={ChangePassword}>
         <Text style={styles.buttonText}>Cambiar Contraseña</Text>
       </TouchableOpacity>
