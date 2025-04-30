@@ -23,6 +23,7 @@ import ChangePassword from './Components/Menu_Burger/ChangePassword';
 import Quiz from './Components/Quiz';
 import { guardarCredenciales } from './DB/sqlite'; // Importa la función para guardar credenciales
 import { createStackNavigator } from '@react-navigation/stack';
+import Settings from './Components/Menu_Burger/Configuracion'; // Asegúrate de que esta ruta es correcta
 
 const Drawer = createDrawerNavigator();
 
@@ -233,10 +234,12 @@ const LoginScreen = ({ setIsLoggedIn, setUser }) => {
 
 const LogOutScreen = ({ route, navigation }) => {
   React.useEffect(() => {
-    route.params?.setIsLoggedIn(false); // Asegúrate de que 'setIsLoggedIn' esté en route.params
-  }, [route.params?.setIsLoggedIn]);
+    if (route?.params?.setIsLoggedIn) {
+      route.params.setIsLoggedIn(false);
+    }
+  }, [route?.params?.setIsLoggedIn]);
 
-  return <LoginScreen setIsLoggedIn={route.params?.setIsLoggedIn} />;
+  return <LoginScreen setIsLoggedIn={route?.params?.setIsLoggedIn || (() => {})} />;
 };
 
 const App = () => {
@@ -244,14 +247,18 @@ const App = () => {
   const [user, setUser] = useState(null); // Inicializa el estado de 'user'
   const Stack = createStackNavigator();
 
-  const ConfigScreen = () => {
+  const ConfigScreen = ({ usuario, navigation }) => {
+    // ✅ Acceso directo sin depender de route.params  
     return (
       <Stack.Navigator>
-        <Stack.Screen name="Config" component={Config} options={{ headerShown: false }} />
+        <Stack.Screen name="Configuración" options={{ headerShown: false }}>
+          {(props) => <Settings {...props} usuario={usuario} />}
+        </Stack.Screen>
         <Stack.Screen name="Cambiar Contraseña" component={ChangePassword} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
-  };
+  };  
+  
 
   return (
     <NavigationContainer>
@@ -268,7 +275,7 @@ const App = () => {
           <>
             <Drawer.Screen name="Inicio" component={HomeScreen} />
             <Drawer.Screen name="Configurar">
-              {() => <Config usuario={user} />}
+              {(props) => <ConfigScreen {...props} usuario={user} />}
             </Drawer.Screen>
             <Drawer.Screen name="Sobre Nosotros" component={AboutUs} />
             <Drawer.Screen
