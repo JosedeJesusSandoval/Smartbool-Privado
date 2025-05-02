@@ -23,7 +23,8 @@ import ChangePassword from './Components/Menu_Burger/ChangePassword';
 import Quiz from './Components/Quiz';
 import { guardarCredenciales } from './DB/sqlite'; // Importa la función para guardar credenciales
 import { createStackNavigator } from '@react-navigation/stack';
-import Settings from './Components/Menu_Burger/Configuracion'; // Asegúrate de que esta ruta es correcta
+import Settings from './Components/Menu_Burger/Configuracion'; 
+import ChangeEmail from './Components/Menu_Burger/ChangeEmail';
 
 const Drawer = createDrawerNavigator();
 
@@ -255,6 +256,7 @@ const App = () => {
           {(props) => <Settings {...props} usuario={usuario} />}
         </Stack.Screen>
         <Stack.Screen name="Cambiar Contraseña" component={ChangePassword} options={{ headerShown: false }} />
+        <Stack.Screen name="Cambiar Correo" component={ChangeEmail} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   };  

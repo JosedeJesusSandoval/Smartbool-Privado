@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { supabase } from '../../DB/supabase'; // Asegúrate de que esta ruta sea correcta
+import ChangeEmail from './ChangeEmail';
 
 const Settings = ({ usuario, navigation }) => {
 
@@ -32,8 +33,8 @@ const Settings = ({ usuario, navigation }) => {
     }
   };
 
-  const changeEmail = () => {
-    Alert.alert('Cambiar Correo', 'Función para cambiar el correo.');
+  const ChangeEmail = () => {
+    navigation.navigate('Cambiar Correo');
   };
 
   const logout = () => {
@@ -55,7 +56,7 @@ const Settings = ({ usuario, navigation }) => {
         <Text style={styles.buttonText}>Limpiar Historial</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={changeEmail}>
+      <TouchableOpacity style={styles.button} onPress={ChangeEmail}>
         <Text style={styles.buttonText}>Cambiar Correo</Text>
       </TouchableOpacity>
     </View>
