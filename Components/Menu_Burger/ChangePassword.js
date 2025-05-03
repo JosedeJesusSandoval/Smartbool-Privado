@@ -105,7 +105,7 @@ const ChangePassword = () => {
         </View>
         
         <View style={styles.inputContainer}>
-          <Icon name="alternate-email" size={20} color="#999" style={styles.icon} />
+          <Icon name="key" size={20} color="#999" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Nueva contraseña"
