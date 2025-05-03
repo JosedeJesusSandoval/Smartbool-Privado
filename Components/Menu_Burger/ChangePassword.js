@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
 import * as Crypto from 'expo-crypto';
 import { supabase } from '../../DB/supabase';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ChangePassword = () => {
   const { width } = useWindowDimensions();
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
-  // Validación del correo
   const isValidEmail = (email) => {
     const emailDomainRegex = /@(alumnos\.udg\.mx|academicos\.udg\.mx)$/;
     return emailDomainRegex.test(email);
   };
 
-  // Validación de la contraseña
   const isValidPassword = (password) => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_]).+$/;
     return passwordRegex.test(password);
@@ -26,41 +35,38 @@ const ChangePassword = () => {
       return;
     }
 
-    if (!isValidPassword(newPassword)) {
-      Alert.alert('Error', 'La contraseña debe contener al menos una letra mayúscula y un carácter especial');
-      return;
-    }
-
     if (!newPassword) {
       Alert.alert('Error', 'La nueva contraseña no puede estar vacía');
       return;
     }
 
+    if (!isValidPassword(newPassword)) {
+      Alert.alert('Error', 'La contraseña debe contener al menos una letra mayúscula y un carácter especial');
+      return;
+    }
+
     try {
-      // Genera el hash de la nueva contraseña
       const hashedPassword = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
         newPassword
       );
 
-      // Verifica si el correo existe en la base de datos
       const { data, error } = await supabase
         .from('usuarios')
         .select('email')
         .eq('email', email)
-        .single();  // `single()` asegura que solo obtendrás un único registro o null
+        .single();
 
       if (error || !data) {
         Alert.alert('Error', 'Correo no encontrado');
         return;
       }
 
-      // Si el correo existe, actualiza la contraseña y la fecha de actualización
-      const { updateData, updateError } = await supabase
+      const { updateError } = await supabase
         .from('usuarios')
         .update({
           password_hash: hashedPassword,
-          updated_at: new Date().toISOString()  // Usa la fecha actual en formato ISO
+          updated_at: new Date().toISOString()
         })
         .eq('email', email);
 
@@ -79,48 +85,115 @@ const ChangePassword = () => {
   };
 
   return (
-    <View style={[styles.container, { paddingHorizontal: width * 0.1 }]}>
-      <Text style={styles.title}>Cambiar Contraseña</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[styles.container, { paddingHorizontal: width * 0.1 }]}
+    >
+      <View style={styles.card}>
+        <Text style={styles.title}>🔒 Cambiar Contraseña</Text>
+        <View style={styles.inputContainer}>
+          <Icon name="email" size={20} color="#999" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Correo institucional"
+          placeholderTextColor="#aaa"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+        </View>
+        
+        <View style={styles.inputContainer}>
+          <Icon name="alternate-email" size={20} color="#999" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nueva contraseña"
+          placeholderTextColor="#aaa"
+          secureTextEntry
+          value={newPassword}
+          onChangeText={setNewPassword}
+        />
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Ingresa tu correo"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Nueva Contraseña"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
-
-      <Button title="Actualizar Contraseña" onPress={handleChangePassword} />
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+          <Text style={styles.buttonText}>Actualizar Contraseña</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#faebe0',
     justifyContent: 'center',
   },
+  card: {
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6,
+  },
   title: {
-    fontSize: 24,
+    fontSize: 26,
+    color: '#963f00',
     marginBottom: 20,
-    textAlign: 'center',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   input: {
-    borderBottomWidth: 1,
-    marginBottom: 15,
-    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     fontSize: 16,
-  },
+    marginBottom: 16,
+    backgroundColor: '#f9f9f9',
+    color: '#333',
+},
+button: {
+  paddingVertical: 14,
+  backgroundColor: '#b04f09',
+  borderRadius: 12,
+  alignItems: 'center',
+  marginVertical: 10,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 6,
+},
+buttonText: {
+  color: '#fff',
+  fontWeight: 'bold',
+  fontSize: 17,
+},
+inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 12,
+        backgroundColor: '#f9f9f9',
+        marginBottom: 16,
+        paddingHorizontal: 12,
+    },  
+    icon: {
+        marginRight: 8,
+    },
+    
+    input: {
+        flex: 1,
+        paddingVertical: 12,
+        fontSize: 16,
+        color: '#333',
+    },
 });
 
 export default ChangePassword;

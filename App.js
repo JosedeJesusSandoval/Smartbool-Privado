@@ -25,6 +25,7 @@ import { guardarCredenciales } from './DB/sqlite'; // Importa la función para g
 import { createStackNavigator } from '@react-navigation/stack';
 import Settings from './Components/Menu_Burger/Configuracion'; 
 import ChangeEmail from './Components/Menu_Burger/ChangeEmail';
+import CustomDrawerContent from './Components/CustomDrawerContent';
 
 const Drawer = createDrawerNavigator();
 
@@ -265,25 +266,44 @@ const App = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
-          headerStyle: { backgroundColor: '#000' },
+          headerStyle: { backgroundColor: '#1a1a2e' },
           headerTintColor: '#fff',
-          drawerActiveBackgroundColor: '#999',
+          drawerActiveBackgroundColor: '#d78f46',
           drawerActiveTintColor: '#fff',
-          drawerStyle: { backgroundColor: '#fff', width: 250 },
+          drawerInactiveTintColor: '#c9c9c9',
+          drawerLabelStyle: { fontSize: 16, marginLeft: -10 },
+          drawerStyle: { backgroundColor: '#5f2539', width: 260 },
         }}
       >
         {isLoggedIn ? (
           <>
-            <Drawer.Screen name="Inicio" component={HomeScreen} />
-            <Drawer.Screen name="Configurar">
+            <Drawer.Screen
+              name="Inicio"
+              component={HomeScreen}
+              options={{
+                drawerIcon: ({ color }) => <Ionicons name="home-outline" size={20} color={color} />,
+              }}
+            />
+            <Drawer.Screen
+              name="Configurar"
+              options={{
+                drawerIcon: ({ color }) => <Ionicons name="settings-outline" size={20} color={color} />,
+              }}
+            >
               {(props) => <ConfigScreen {...props} usuario={user} />}
             </Drawer.Screen>
-            <Drawer.Screen name="Sobre Nosotros" component={AboutUs} />
+            <Drawer.Screen name="Sobre Nosotros" component={AboutUs} options={{
+                drawerIcon: ({ color }) => <Ionicons name="people-outline" size={20} color={color} />,
+              }}/>
             <Drawer.Screen
               name="Log Out"
               component={LogOutScreen}
               initialParams={{ setIsLoggedIn }}  // Aquí ya estás pasando setIsLoggedIn
+              options={{
+                drawerIcon: ({ color }) => <Ionicons name="log-out-outline" size={20} color={color} />,
+              }}
             />
           </>
         ) : (

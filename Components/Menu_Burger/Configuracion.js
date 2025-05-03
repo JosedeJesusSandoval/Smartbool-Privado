@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { supabase } from '../../DB/supabase'; // Asegúrate de que esta ruta sea correcta
-import ChangeEmail from './ChangeEmail';
+import React from 'react';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Pressable } from 'react-native';
+import { supabase } from '../../DB/supabase';
 
 const Settings = ({ usuario, navigation }) => {
 
-  // Muestra un mensaje si no se encuentra 'usuario'
   if (!usuario) {
     return <Text>Esperando usuario...</Text>;
   }
@@ -15,7 +13,7 @@ const Settings = ({ usuario, navigation }) => {
   };
 
   const clearHistory = async () => {
-    if (!usuario || !usuario.id) {
+    if (!usuario?.id) {
       Alert.alert('Error', 'No se encontró el ID del usuario.');
       return;
     }
@@ -37,28 +35,23 @@ const Settings = ({ usuario, navigation }) => {
     navigation.navigate('Cambiar Correo');
   };
 
-  const logout = () => {
-    Alert.alert('Cerrar Sesión', 'Has cerrado sesión correctamente.');
-    navigation.navigate('Login');
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Configuración</Text>
+      <Text style={styles.title}>⚙️ Configuración</Text>
 
-      <Text style={styles.label}>Seleccionar Idioma</Text>
+      <Text style={styles.label}>Idioma actual: Español</Text>
 
-      <TouchableOpacity style={styles.button} onPress={ChangePassword}>
-        <Text style={styles.buttonText}>Cambiar Contraseña</Text>
-      </TouchableOpacity>
+      <Pressable style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]} onPress={ChangePassword}>
+        <Text style={styles.buttonText}>🔐 Cambiar Contraseña</Text>
+      </Pressable>
 
-      <TouchableOpacity style={styles.button} onPress={clearHistory}>
-        <Text style={styles.buttonText}>Limpiar Historial</Text>
-      </TouchableOpacity>
+      <Pressable style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]} onPress={clearHistory}>
+        <Text style={styles.buttonText}>🗑️ Limpiar Historial</Text>
+      </Pressable>
 
-      <TouchableOpacity style={styles.button} onPress={ChangeEmail}>
-        <Text style={styles.buttonText}>Cambiar Correo</Text>
-      </TouchableOpacity>
+      <Pressable style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]} onPress={ChangeEmail}>
+        <Text style={styles.buttonText}>✉️ Cambiar Correo</Text>
+      </Pressable>
     </View>
   );
 };
@@ -66,33 +59,43 @@ const Settings = ({ usuario, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    backgroundColor: '#faebe0',
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#963f00',
+    marginBottom: 30,
   },
   label: {
     fontSize: 18,
-    marginBottom: 10,
+    color: '#555',
+    marginBottom: 20,
   },
   button: {
-    width: '80%',
-    padding: 15,
-    backgroundColor: '#000',
-    borderRadius: 5,
+    width: '90%',
+    paddingVertical: 16,
+    backgroundColor: '#b04f09',
+    borderRadius: 12,
     alignItems: 'center',
     marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  logoutButton: {
-    backgroundColor: '#d9534f',
+  buttonPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.98 }],
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
+    fontWeight: '600',
   },
 });
 
