@@ -15,23 +15,16 @@ const AboutUs = () => {
       />
       <Text style={styles.title}>Sobre Nosotros</Text>
       <Text style={styles.description}>
-        Smartboole es un proyecto desarrollado en el laboratorio de Inventores
+        Smartboole es un proyecto que busca ayudar a los usuarios a resolver sus problemas con los cicuitos logicos,{"\n"}
+        realizando el analisis de los mismos con la ayuda de las redes convolucionales
       </Text>
 
-      <Text style={styles.credits}>
-        Créditos:
+      <Text style={styles.credits_title}>
+      Desarrolladores de la App
       </Text>
       <Text style={styles.credits}>
-        - Desarrolladora de redes neuronales: 
-      </Text>
-      <Text style={styles.credits}>
-        - Desarrollador de la base de datos: 
-      </Text>
-      <Text style={styles.credits}>
-        - Desarrolladora de la App: 
-      </Text>
-      <Text style={styles.credits}>
-        gracias a nuestros encargados por darnos la oportunidad de desarrollar este proyecto
+        Sandoval Ruiz Jóse de Jesús {"\n"}
+        Esteban Fabian Ramirez Gonzalez
       </Text>
     </View>
   );
@@ -41,30 +34,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#faebe0',
   },
   image: {
     width: "80%",
-    height: "50%",
-    //borderRadius: 75,
-    //zoom: 2,
+    height: "40%",
+    resizeMode: 'contain',
+    borderRadius:180,
+    marginTop: 30,
+    marginBottom: 25,
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
+    color: '#963f00',
+    marginBottom: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    textAlign: 'center',
   },
   description: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
-    color: '#333',
+    color: '#000',
+  },
+  credits_title:{
+    fontSize: 25,
+    color: '#963f00',
+    marginTop: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
   credits: {
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'center',
-    color: '#777',
+    color: '#000',
   },
 });
 

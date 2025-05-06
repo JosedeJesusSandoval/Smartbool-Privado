@@ -270,7 +270,6 @@ const App = () => {
         screenOptions={{
           headerStyle: { backgroundColor: '#1a1a2e' },
           headerTintColor: '#fff',
-          drawerActiveBackgroundColor: '#d78f46',
           drawerActiveTintColor: '#fff',
           drawerInactiveTintColor: '#c9c9c9',
           drawerLabelStyle: { fontSize: 16, marginLeft: -10 },
@@ -278,7 +277,7 @@ const App = () => {
         }}
       >
         {isLoggedIn ? (
-          <>
+          <>  
             <Drawer.Screen
               name="Inicio"
               component={HomeScreen}
