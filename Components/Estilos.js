@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 },
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#faebe0',
   },
   logoApp: {
     width: "35%",
@@ -86,7 +86,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    
+
+    backgroundColor: '#faebe0',
   },
   card: {
     flex: 1,
@@ -226,7 +227,7 @@ containerFormulario: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#faebe0',
   },
   gateContainerFormulario: {
     marginBottom: 20,
@@ -235,7 +236,7 @@ containerFormulario: {
   gateContainerform: {
     width: '90%',
     padding: 20,
-    backgroundColor: 'white', // Fondo más suave para el neumorfismo
+    backgroundColor: '#faebe0',
     borderRadius: 10,
     alignItems: 'center',
     shadowColor: '#fff', // Sombra clara
@@ -297,7 +298,7 @@ containerFormulario: {
 /*****  Calculadora  ********/
 containerCalculadora: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#faebe0',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -399,6 +400,63 @@ containerCalculadora: {
       marginBottom: 20, // Espacio entre el checkbox y el botón
     },
 
+    datosCard: {
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      marginVertical: 10,
+      marginHorizontal: 20,
+      padding: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 5 },
+      shadowOpacity: 0.15,
+      shadowRadius: 10,
+      elevation: 6,
+      alignItems: 'center',
+    },
+    imagenCard: {
+      width: 200,
+      height: 200,
+      borderRadius: 12,
+      resizeMode: 'cover',
+      marginBottom: 15,
+    },
+    cardFecha: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: '#333',
+      marginBottom: 15,
+    },
+    botonesCardContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginTop: 10,
+    },
+    botonEditarNuevo: {
+      backgroundColor: '#02a314',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 10,
+      marginHorizontal: 5,
+      flex: 1,
+      alignItems: 'center',
+    },
+    botonEliminarNuevo: {
+      backgroundColor: '#ff5555',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 10,
+      marginHorizontal: 5,
+      flex: 1,
+      alignItems: 'center',
+    },
+    textoBotonNuevo: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    
+  
 
 /*****  Configuracion.js  ********/
 

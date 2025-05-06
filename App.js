@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   Image,
   ImageBackground,
   TextInput,
+  Dimensions,
+  Animated,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -26,58 +28,138 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Settings from './Components/Menu_Burger/Configuracion'; 
 import ChangeEmail from './Components/Menu_Burger/ChangeEmail';
 import CustomDrawerContent from './Components/CustomDrawerContent';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Drawer = createDrawerNavigator();
 
 import { supabase } from './DB/supabase';
 import * as Crypto from 'expo-crypto';
+const screenWidth = Dimensions.get('window').width;
 
 const HomeScreen = () => {
   const [activeTab, setActiveTab] = useState('Historial');
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'Historial':
-        return <Historial />;
-      case 'Imagenes':
-        return <Imagenes />;
-      case 'Calculadora':
-        return <Calculadora />;
-      case 'Formulario':
-        return <Formulario />;
-      case 'Quiz':
-        return <Quiz />;
-      default:
-        return null;
-    }
+  const animateContent = () => {
+    fadeAnim.setValue(0);
+    scaleAnim.setValue(0.95);
+
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 6,
+        tension: 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
+  useEffect(() => {
+    animateContent();
+  }, [activeTab]);
+
+  const renderContent = () => {
+    let Component;
+    switch (activeTab) {
+      case 'Historial':
+        Component = Historial;
+        break;
+      case 'Imagenes':
+        Component = Imagenes;
+        break;
+      case 'Calculadora':
+        Component = Calculadora;
+        break;
+      case 'Formulario':
+        Component = Formulario;
+        break;
+      case 'Quiz':
+        Component = Quiz;
+        break;
+      default:
+        Component = Historial;
+    }
+
+    return (
+      <Animated.View
+        style={{
+          flex: 1,
+          opacity: fadeAnim,
+          transform: [{ scale: scaleAnim }],
+        }}
+      >
+        <Component />
+      </Animated.View>
+    );
+  };
+
+  const tabItems = [
+    { name: 'Historial', icon: 'time-outline' },
+    { name: 'Imagenes', icon: 'image-outline' },
+    { name: 'Calculadora', icon: 'calculator-outline' },
+    { name: 'Formulario', icon: 'document-text-outline' },
+    { name: 'Quiz', icon: 'help-circle-outline' },
+  ];
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>{renderContent()}</View>
-      <View style={styles.navbar}>
-        <TouchableOpacity onPress={() => setActiveTab('Historial')} style={styles.navButton}>
-          <Ionicons name="time-outline" size={24} color={activeTab === 'Historial' ? '#d9534f' : '#777'} />
-          <Text style={[styles.navText, activeTab === 'Historial' && styles.activeText]}>Historial</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Imagenes')} style={styles.navButton}>
-          <Ionicons name="image" size={24} color={activeTab === 'Imagenes' ? '#d9534f' : '#777'} />
-          <Text style={[styles.navText, activeTab === 'Imagenes' && styles.activeText]}>Imagenes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Calculadora')} style={styles.navButton}>
-          <Ionicons name="calculator" size={24} color={activeTab === 'Calculadora' ? '#d9534f' : '#777'} />
-          <Text style={[styles.navText, activeTab === 'Calculadora' && styles.activeText]}>Calculadora</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Formulario')} style={styles.navButton}>
-          <Ionicons name="book-outline" size={24} color={activeTab === 'Formulario' ? '#d9534f' : '#777'} />
-          <Text style={[styles.navText, activeTab === 'Formulario' && styles.activeText]}>Formulario</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Quiz')} style={styles.navButton}>
-          <Ionicons name="help-circle-outline" size={24} color={activeTab === 'Quiz' ? '#d9534f' : '#777'} />
-          <Text style={[styles.navText, activeTab === 'Quiz' && styles.activeText]}>Quiz</Text>
-        </TouchableOpacity>
+    <LinearGradient
+      colors={['#1a1a2e', '#16213e']}
+      style={{ flex: 1 }}
+    >
+      <View style={{ flex: 1, padding: 10, paddingBottom: 80 }}>
+        {renderContent()}
       </View>
-    </View>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 70,
+          backgroundColor: '#1a1a2e',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          borderTopWidth: 1,
+          borderTopColor: '#333', // opcional: separador superior
+        }}
+      >
+        {tabItems.map((item) => (
+          <TouchableOpacity
+            key={item.name}
+            onPress={() => setActiveTab(item.name)}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+              transform: [{ scale: activeTab === item.name ? 1.1 : 1 }],
+            }}
+          >
+            <Ionicons
+              name={item.icon}
+              size={26}
+              color={activeTab === item.name ? '#f4a261' : '#dcdcdc'}
+            />
+            <Text
+              style={{
+                fontSize: 12,
+                color: activeTab === item.name ? '#f4a261' : '#dcdcdc',
+                marginTop: 2,
+                fontWeight: '600',
+              }}
+            >
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </LinearGradient>
   );
 };
 

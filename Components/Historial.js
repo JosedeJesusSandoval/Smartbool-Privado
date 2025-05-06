@@ -18,24 +18,18 @@ class Datos extends Component {
     const { id, fecha, imagen, onEditar, onEliminar } = this.props;
 
     return (
-      <ScrollView contentContainerStyle={styles.containerImg}>
-      <View style={styles.datos}>
-        <Image 
-          source={imagen} 
-          style={styles.imagen} 
-        />
-        <Text style={styles.titulo}>Fecha: {fecha}</Text>
-        <View style={styles.botonesContainer}>
-          <TouchableOpacity style={styles.botonEditar} onPress={onEditar}>
-            <Text style={styles.textoBoton}>Editar</Text>
+      <View style={styles.datosCard}>
+        <Image source={imagen} style={styles.imagenCard} />
+        <Text style={styles.cardFecha}>📅 {fecha}</Text>
+        <View style={styles.botonesCardContainer}>
+          <TouchableOpacity style={styles.botonEditarNuevo} onPress={onEditar}>
+            <Text style={styles.textoBotonNuevo}>✏️ Editar</Text>
           </TouchableOpacity>
-          <View style={styles.separador} />
-          <TouchableOpacity style={styles.botonEliminar} onPress={onEliminar}>
-            <Text style={styles.textoBoton}>Eliminar</Text>
+          <TouchableOpacity style={styles.botonEliminarNuevo} onPress={onEliminar}>
+            <Text style={styles.textoBotonNuevo}>🗑️ Eliminar</Text>
           </TouchableOpacity>
         </View>
       </View>
-      </ScrollView>
     );
   }
 }

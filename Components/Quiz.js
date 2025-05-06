@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 
-// Define the structure of a question
+const { width } = Dimensions.get('window');
+
 const questions = [
   {
     question: '¿Cuál es la salida de una compuerta AND si ambas entradas son 1?',
@@ -28,32 +36,6 @@ const questions = [
     options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
     correctOption: 0,
   },
-  {
-    question: '¿Cuál es la salida de una compuerta XOR si las entradas son 1 y 0?',
-    options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
-    correctOption: 1,
-  },
-  {
-    question: '¿Cuál es la salida de una compuerta XNOR si ambas entradas son 1?',
-    options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
-    correctOption: 1,
-  },
-  {
-    question: '¿Cuál es la salida de una compuerta AND si una entrada es 0 y la otra es 1?',
-    options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
-    correctOption: 0,
-  },
-  {
-    question: '¿Cuál es la salida de una compuerta OR si una entrada es 1 y la otra es 0?',
-    options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
-    correctOption: 1,
-  },
-  {
-    question: '¿Cuál es la salida de una compuerta NOT si la entrada es 0?',
-    options: ['0', '1', 'Depende', 'Ninguna de las anteriores'],
-    correctOption: 1,
-  },
-  // Add more questions here if needed
 ];
 
 export default function QuizApp() {
@@ -84,32 +66,34 @@ export default function QuizApp() {
   const calculateScore = () => {
     let correctAnswers = 0;
     selectedOptions.forEach((selectedOption, index) => {
-      if (selectedOption === questions[index].correctOption) {
+      const question = questions[index];
+      if (question && selectedOption === question.correctOption) {
         correctAnswers += 1;
       }
     });
     return (correctAnswers / questions.length) * 100;
-  };
+  };  
 
   const renderQuestion = () => {
     const question = questions[currentQuestionIndex];
     return (
       <View>
-        <Text style={styles.question}>{question.question}</Text>
+        <Text style={styles.questionTitle}>Pregunta {currentQuestionIndex + 1}</Text>
+        <Text style={styles.questionText}>{question.question}</Text>
         {question.options.map((option, index) => (
           <TouchableOpacity
             key={index}
             style={[
-              styles.option,
-              selectedOptions[currentQuestionIndex] === index && styles.selectedOption,
+              styles.optionCard,
+              selectedOptions[currentQuestionIndex] === index && styles.selectedOptionCard,
             ]}
             onPress={() => handleOptionPress(index)}
           >
             <Text style={styles.optionText}>{option}</Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.quizButton} onPress={handleNextQuestion}>
-          <Text style={styles.quizButtonText}>Siguiente</Text>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNextQuestion}>
+          <Text style={styles.nextButtonText}>Siguiente</Text>
         </TouchableOpacity>
       </View>
     );
@@ -118,102 +102,101 @@ export default function QuizApp() {
   const renderResult = () => {
     const score = calculateScore();
     let message = '';
-    let imageText = '';
     if (score < 60) {
-      message = 'Debes estudiar más';
-      imageText = 'Imagen 1';
+      message = 'Debes estudiar más 🧐';
     } else if (score < 80) {
-      message = 'Buen trabajo, necesitas reforzar tus conocimientos';
-      imageText = 'Imagen 2';
+      message = 'Buen trabajo, ¡sigue practicando! 💪';
     } else if (score < 90) {
-      message = 'Muy buen trabajo';
-      imageText = 'Imagen 3';
+      message = '¡Muy bien hecho! 🎉';
     } else {
-      message = 'Excelente';
-      imageText = 'Imagen 3';
+      message = '¡Excelente! 🏆';
     }
+
     return (
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.result}>Tu puntaje es: {score}%</Text>
-        <Text style={styles.message}>{message}</Text>
-        <TouchableOpacity style={styles.quizButton} onPress={handleRestart}>
-          <Text style={styles.quizButtonText}>Reiniciar</Text>
+      <ScrollView contentContainerStyle={styles.resultContainer}>
+        <Text style={styles.resultScore}>Tu puntaje: {score}%</Text>
+        <Text style={styles.resultMessage}>{message}</Text>
+        <TouchableOpacity style={styles.nextButton} onPress={handleRestart}>
+          <Text style={styles.nextButtonText}>Reiniciar Quiz</Text>
         </TouchableOpacity>
-        <View style={styles.placeholderImage}>
-          <Text style={styles.placeholderText}>{imageText}</Text>
-        </View>
       </ScrollView>
     );
   };
 
-  return (
-    <View style={styles.container}>
-      {showResult ? renderResult() : renderQuestion()}
-    </View>
-  );
+  return <View style={styles.container}>{showResult ? renderResult() : renderQuestion()}</View>;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#faebe0',
+    padding: 20,
     justifyContent: 'center',
-    padding: 16,
   },
-  question: {
-    fontSize: 24,
-    marginBottom: 16,
+  questionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+    textAlign: 'center',
   },
-  option: {
-    padding: 12,
-    marginVertical: 4,
-    backgroundColor: 'white',
-    borderRadius: 4,
+  questionText: {
+    fontSize: 20,
+    color: '#444',
+    marginBottom: 20,
+    textAlign: 'center',
   },
-  selectedOption: {
-    backgroundColor: '#c0c0c0',
+  optionCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 15,
+    marginVertical: 8,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  selectedOptionCard: {
+    backgroundColor: '#cde1f9',
+    borderColor: '#3a7bd5',
   },
   optionText: {
     fontSize: 18,
+    color: '#333',
   },
-  result: {
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  quizButton: {
-    width: '90%',
-    backgroundColor: 'black',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-    alignSelf: 'center',
-  },
-  quizButtonText: {
-    color: 'white',
-    fontSize: 18,
-  },
-  placeholderImage: {
-    width: 300,
-    height: 300,
+  nextButton: {
+    marginTop: 20,
+    backgroundColor: '#b04f09',
+    paddingVertical: 14,
+    paddingHorizontal: 30,
     borderRadius: 10,
-    marginBottom: 20,
-    backgroundColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  placeholderText: {
+  nextButtonText: {
+    color: '#fff',
     fontSize: 18,
-    color: 'black',
+    fontWeight: '600',
   },
-  scrollViewContent: {
+  resultContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 40,
+  },
+  resultScore: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#222',
+  },
+  resultMessage: {
+    fontSize: 20,
+    color: '#555',
+    marginBottom: 30,
+    textAlign: 'center',
   },
 });
