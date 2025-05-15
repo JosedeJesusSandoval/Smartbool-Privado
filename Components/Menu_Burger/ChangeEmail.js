@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 6,
-      },
+    },
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',

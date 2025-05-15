@@ -24,7 +24,7 @@ const AboutUs = () => {
       </Text>
       <Text style={styles.credits}>
         Sandoval Ruiz Jóse de Jesús {"\n"}
-        Esteban Fabian Ramirez Gonzalez
+        Ramirez Gonzalez Esteban Fabian 
       </Text>
     </View>
   );

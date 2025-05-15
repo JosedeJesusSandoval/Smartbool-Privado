@@ -18,7 +18,7 @@ import styles from './Components/Estilos.js';
 import Calculadora from './Components/Calculadora';
 import Historial from './Components/Historial';
 import Imagenes from './Components/Imagenes';
-import Formulario from './Components/Formulario';
+import FormularioMenu from './Components/Menu_Burger/FormularioMenu';
 import Config from './Components/Menu_Burger/Configuracion';
 import AboutUs from './Components/Menu_Burger/Sobre_Nosotros';
 import ChangePassword from './Components/Menu_Burger/ChangePassword';
@@ -29,8 +29,14 @@ import Settings from './Components/Menu_Burger/Configuracion';
 import ChangeEmail from './Components/Menu_Burger/ChangeEmail';
 import CustomDrawerContent from './Components/CustomDrawerContent';
 import { LinearGradient } from 'expo-linear-gradient';
+import CompuertasLogicas from './Components/Menu_Burger/MenuFormulario/CompuertasLogicas';
+import AlgebraBoole from './Components/Menu_Burger/MenuFormulario/AlgebraBoole.js';
+import MapaKarnaugh from './Components/Menu_Burger/MenuFormulario/MapaKarnaugh';
+
 
 const Drawer = createDrawerNavigator();
+
+const FormularioStack = createStackNavigator();
 
 import { supabase } from './DB/supabase';
 import * as Crypto from 'expo-crypto';
@@ -76,9 +82,6 @@ const HomeScreen = () => {
       case 'Calculadora':
         Component = Calculadora;
         break;
-      case 'Formulario':
-        Component = Formulario;
-        break;
       case 'Quiz':
         Component = Quiz;
         break;
@@ -103,7 +106,6 @@ const HomeScreen = () => {
     { name: 'Historial', icon: 'time-outline' },
     { name: 'Imagenes', icon: 'image-outline' },
     { name: 'Calculadora', icon: 'calculator-outline' },
-    { name: 'Formulario', icon: 'document-text-outline' },
     { name: 'Quiz', icon: 'help-circle-outline' },
   ];
 
@@ -162,6 +164,46 @@ const HomeScreen = () => {
     </LinearGradient>
   );
 };
+
+const FormularioStackScreen = () => (
+  <FormularioStack.Navigator>
+    <FormularioStack.Screen
+      name="FormularioMenu"
+      component={FormularioMenu}
+      options={{ headerShown: false }}
+    />
+    <FormularioStack.Screen
+      name="CompuertasLogicas"
+      component={CompuertasLogicas}
+      options={{ 
+        title: 'Compuertas Lógicas',
+        headerStyle: { backgroundColor: '#FFCC80' },
+        headerTintColor: '#963F00',
+        headerTitleStyle: { fontWeight: 'bold' } 
+      }}
+    />
+    <FormularioStack.Screen
+      name="AlgebraBoole"
+      component={AlgebraBoole}
+      options={{ 
+        title: 'Álgebra de Boole',
+        headerStyle: { backgroundColor: '#FFCC80' }, 
+        headerTintColor: '#963F00', 
+        headerTitleStyle: { fontWeight: 'bold' } 
+      }}
+    />
+    <FormularioStack.Screen
+      name="MapaKarnaugh"
+      component={MapaKarnaugh}
+      options={{ 
+        title: 'Mapa de Karnaugh',
+        headerStyle: { backgroundColor: '#FFCC80' }, 
+        headerTintColor: '#963F00', 
+        headerTitleStyle: { fontWeight: 'bold' } 
+      }}
+    />
+  </FormularioStack.Navigator>
+);
 
 const LoginScreen = ({ setIsLoggedIn, setUser }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -367,6 +409,14 @@ const App = () => {
                 drawerIcon: ({ color }) => <Ionicons name="home-outline" size={20} color={color} />,
               }}
             />
+            <Drawer.Screen
+              name='Formulario'
+              component={FormularioStackScreen}
+              options={{
+                drawerIcon: ({ color }) => <Ionicons name="document-text-outline" size={20} color={color} />,
+}}
+            />
+            
             <Drawer.Screen
               name="Configurar"
               options={{
